@@ -1,0 +1,65 @@
+.myBar{
+
+}
+
+#submitIt{display: none;}
+.wrappers{height: 300px;margin-top: 100px;margin-left: 200px;}
+.AdminOptions{
+
+  margin-top: 150px;
+  display: inline;
+   padding-right: 50px;
+   font-size: 150%;
+   border-left: 5px solid;
+    border-spacing: 5px;
+   border-color: #ff6666;
+}
+
+.AdminOptions a{   text-decoration: none; color: black;margin-left: 10px; font-weight: 600;}
+.AdminOptions:hover{background-color: #fa8072;}
+.searchTerm{
+  /*height:50px;*/
+  width: 400px;
+  padding: 0 0 0 0;
+  padding-top: 0px;
+  height: 50;
+  vertical-align: top;
+  height: 40px;
+}
+.searchButton{
+  height: 50px;
+  width: 50px;
+  padding: 0 0 0 0;
+
+}
+.searchButton:hover{
+  background-color: #e6e6e6;
+}
+.search{
+  margin: auto;
+  width:500px;
+  padding-top: 150px;
+  height: 50px;
+
+}
+.navBar{
+/*height: 40px;*/
+}
+.admin>a{
+  font-size:70%;
+  border-left: 2px solid;
+   padding: 4px;
+  text-decoration:none;
+}
+.admin>a:hover{
+  background-color: #e6e6e6;
+}
+.content{
+  min-height: 200px;
+
+}
+
+
+/*From W3school*/
+
+/*

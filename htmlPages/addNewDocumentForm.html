@@ -1,0 +1,36 @@
+<form method="post" enctype="multipart/form-data">
+<span id="filesNumbersInput">
+<label id="myLabel">Please select the number of files to upload: </label>
+<input type="number" id="filesNumbersInput2" name="numberOfFiles" />
+</span>
+<span id="files"></span>
+
+ <!-- <input id="firstFile" type="file" name="file"/> -->
+
+ <br /><br />
+ <label id="filesNumber"></label>
+ <br />
+ <input id="submitIt"type="submit" value="GO"></input>
+</form>
+
+
+
+<script>
+var counter = 0;
+$(document).ready(function(){
+
+
+$("#filesNumbersInput").change(function(){
+for(var i=0;i<$("#filesNumbersInput2").val();i++){
+  $("#files").append('<input id="firstFile" type="file" name="file'+i+'"/><br />');
+
+}
+$("#files").append('<input name="file'+i+'" type="submit" value="GO!"  >');
+
+$("#filesNumbersInput").css("display","none");
+
+console.log("number = "+$("#filesNumbersInput").val() );
+})
+});
+
+</script>
