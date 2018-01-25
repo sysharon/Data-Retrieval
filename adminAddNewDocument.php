@@ -45,7 +45,7 @@ for($i=0;$i<$numberOfFiles;$i++){
 }
 }
 else {
-  echo 'problem opening index file';
+  echo 'problem opening index files';
 }
 
 }
