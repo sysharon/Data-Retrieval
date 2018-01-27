@@ -29,23 +29,49 @@ require_once("functions.php");
 
 
 
-
+/*
+ELSE means there were post request with the files!
+*/
  else{
    if(func_CheckIfFileOpensOk("files/index")){
+
+    // $index = fopen()
+    // func_checkInIndexFile($value);
+
+
    $numberOfFiles = $_POST['numberOfFiles'];
  echo 'number of files: ',$numberOfFiles,"<br /><Br />";
+$text = func_GetIndexAsString();
+if($text == false) echo 'Problem Reading Index file<br />';
+else{
+// for($i=0;$i<$numberOfFiles;$i++){
+//
+//
+//
+//
+//  if($fp = fopen($_FILES["file$i"]['tmp_name'],"r+")) {
+//    while(($line = fgets($fp)) !==false){
+//        echo 'file[',$i,'] = line= ',$line,"<br />";
+//    }
+//    fclose($fp);
+//  }
+// }
 
-for($i=0;$i<$numberOfFiles;$i++){
- if($fp = fopen($_FILES["file$i"]['tmp_name'],"r+")) {
-   while(($line = fgets($fp)) !==false){
-       echo 'file[',$i,'] = line= ',$line,"<br />";
-   }
-   fclose($fp);
- }
+
+// echo 'text = <br />',$text;
+// echo '<br />for:<br />';
+// for($i=0;$i<strlen($text);$i++){
+//   if($text[$i] == '\n') echo '<br />';
+//   echo $text[$i];
+//
+// }
+
+
+
+  func_GetWordAppearances("line");
+
 }
-}
-else {
-  echo 'problem opening index files';
+
 }
 
 }
