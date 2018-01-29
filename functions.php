@@ -72,8 +72,8 @@ function func_GetWordAppearances($word){
   }
 }
 
-function func_CheckIfExists($term){
-  $conn = func_ConnectToDb();
+function func_CheckIfExists($conn,$term){
+
   if($conn == NULL) return NULL;
   $sql ="SELECT postid FROM indextable WHERE term = '$term'";
   $result = $conn->query($sql);
@@ -90,17 +90,30 @@ function func_CheckIfExists($term){
 
 
 /*
-
+TODO: add this argument suitable for the rest of the application !
 */
-function func_InsertNewTerm($term){
+function func_InsertNewTerm($conn,$term,$docnum){
   echo 'Im inserting new term! ',$term ,'<br />';
+  $query = "INSERT INTO indextable (term , hit) VALUES ('$term','0')";
+  $result = $conn->query($query);
+  if(!$result) return NULL;
+  $postid = func_CheckIfExists($conn,$term);
+  func_UpdateNewTerm($conn,$postid,$docnum);
 }
 
 /*
 
 */
-function func_UpdateNewTerm($postid){
+function func_UpdateNewTerm($conn,$postid,$docnum){
   echo 'Im updating term! ',$postid,'<br />';
+
+  $sql = "UPDATE indextable set hit = hit + 1 WHERE postid = '$postid'";
+  $result = $conn->query($sql);
+
+  $sql = "INSERT INTO postfiletable (postid, docname) VALUES ('$postid','$docnum')";
+  $resul=$conn->query($sql);
+
+
 
 }
 
@@ -111,14 +124,15 @@ function func_ConnectToDb(){
   $db="finalproject";
   $servername = "localhost";
 
-
   $conn = new mysqli($servername, $username, $password,$db);
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  }
-
+  if ($conn->connect_error)     die("Connection failed: " . $conn->connect_error);
   return $conn;
 }
+
+
+
+
+
 function func_DissconnectFromDB($conn){
   $conn->close();
 }
