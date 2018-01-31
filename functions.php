@@ -136,6 +136,62 @@ function func_ConnectToDb(){
 function func_DissconnectFromDB($conn){
   $conn->close();
 }
+function func_ArrangeTableByAsc($conn){
+  $sql =  "ALTER TABLE indextable ORDER term BY ASC";
+  $sql2 = "ALTER TABLE postfiletable ORDER postid BY  ASC";
+
+  $conn->query($sql);
+  if(!$conn)  {
+    echo 'doesnt work ORDER BY<br />';
+    return NULL;
+  }
+  $conn->query($sql2);
+      echo 'doesnt work ORDER BY<br />';
+
+}
+
+function func_FindTermInDocNum($conn,$text,&$arry){
+  $sql = "SELECT docname FROM postfiletable NATURAL JOIN indextable WHERE term = '$text'";
+  $result = $conn->query($sql);
+  if (!$result)
+    return NULL;
+    while($row = $result->fetch_assoc())
+      $arry[intval($row["docname"])]++;
+}
+
+function func_PrintDocsWithHighestHits(&$arry){
+  $max=0;
+
+  foreach(array_keys($arry) as &$value)
+    if($arry[$value] > $max)
+      $max = $arry[$value];
+  foreach(array_keys($arry) as &$value){
+
+    if($value == $max){
+
+    }
+  }
+
+
+
+}
+
+function func_CheckIfIncludedInStopList($term){
+  $stopList= array("a","all","and","any","at","be","do","for","her",
+"how","if","is","many","not","see","the","their","when","why");
+foreach($stopList as $value)
+  if($term == $value)
+    return true;
+
+
+  return false;
+
+}
+
+
+
+
+
 
 
 
