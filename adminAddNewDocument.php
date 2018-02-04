@@ -31,7 +31,7 @@ ELSE means there were post request with the files!
  else{
 
    $numberOfFiles = $_POST['numberOfFiles'];
- echo 'number of files: ',$numberOfFiles,"<br /><Br />";
+ // echo 'number of files: ',$numberOfFiles,"<br /><Br />";
  $conn = func_ConnectToDb();
 
 for($i=0;$i<$numberOfFiles;$i++){
@@ -72,6 +72,7 @@ $max = 0;
    */
    for($j=0;$j<count($str);$j++){
      if($str[$j]== '') continue;
+     echo '$str[$j]= ',$str[$j],'<br />';
      if(func_CheckIfIncludedInStopList($str[$j])) continue;
      $postid = func_CheckIfExists($conn,$str[$j],$fileNum);
      if($postid == -1)   func_InsertNewTerm($conn,$str[$j],$fileNum);
@@ -81,12 +82,6 @@ $max = 0;
  }
 }
 func_DissconnectFromDB($conn);
-
-
-
-
-
-
 
 
 }

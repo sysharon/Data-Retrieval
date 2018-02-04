@@ -13,7 +13,7 @@ require_once("functions.php");
     }
 
   else {
-    echo 'text= ',$searchTerm,'<Br />';
+    // echo 'text= ',$searchTerm,'<Br />';
     $textAfterSplit =preg_split("/[\s,]+/",$searchTerm) ;
     $fileArray=scandir("Permanent");
     $arry = array();
@@ -33,12 +33,15 @@ require_once("functions.php");
 // print_r($keywords);
 // print_r($arry);
 $conn = func_ConnectToDb();
-
+  $numberOfWords = count($textAfterSplit);
     for($i =0;$i<count($textAfterSplit);$i++){
-      echo $textAfterSplit[$i],"<br />" ;//Omri- use this variable to search in an index file which you will write (add random words and numbers) and return in which files the words appear
+      // echo $textAfterSplit[$i],"<br />" ;//Omri- use this variable to search in an index file which you will write (add random words and numbers) and return in which files the words appear
       func_FindTermInDocNum($conn,$textAfterSplit[$i],$arry);
     }
-print_r($arry);
+    func_PrintDocsWithHighestHits($arry,$textAfterSplit);
+  // if($numberOfWords == )
+
+// print_r($arry);
 func_DissconnectFromDB($conn);
 
 
