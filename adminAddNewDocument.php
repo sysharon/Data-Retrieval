@@ -73,7 +73,7 @@ $max = 0;
    for($j=0;$j<count($str);$j++){
      if($str[$j]== '') continue;
      echo '$str[$j]= ',$str[$j],'<br />';
-     if(func_CheckIfIncludedInStopList($str[$j])) continue;
+     // if(func_CheckIfIncludedInStopList($str[$j])) continue;
      $postid = func_CheckIfExists($conn,$str[$j],$fileNum);
      if($postid == -1)   func_InsertNewTerm($conn,$str[$j],$fileNum);
      else  func_UpdateNewTerm($conn,$postid,$fileNum);

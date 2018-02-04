@@ -28,7 +28,7 @@ function func_GetFileAsString($path){
 
   if($text != false){
     echo ' read index file<br />';
-    $textAfterSplit =preg_split("/[\s,(,):\"]+/",$text) ;
+    $textAfterSplit =preg_split("/[\s,(,),.,<,>':\"]+/",$text) ;
     for($i=0;$i<count($textAfterSplit);$i++) $textAfterSplit[$i] = strtolower($textAfterSplit[$i]);
 
     return $textAfterSplit;
@@ -63,7 +63,7 @@ function func_GetWordAppearances($word){
   if(func_CheckIfFileOpensOk("files/index")){
     $fp = fopen("files/index", "r");
     while(($line = fgets($fp)) !==false){
-      $textAfterSplit =preg_split("/[\s,(,):\"]+/",$line) ;
+      $textAfterSplit =preg_split("/[\s,(,),.,<,>':\"]+/",$line) ;
         for($i=0;$i<count($textAfterSplit);$i++){
             if($word == $textAfterSplit[$i]) echo 'we have a match! = ',$word, " = ",$textAfterSplit[$i],'<br />';
       }
@@ -101,8 +101,8 @@ function func_InsertNewTerm($conn,$term,$docnum){
 */
 function func_UpdateNewTerm($conn,$postid,$docnum){
   if(func_CheckIfExistsInSameDoc($conn,$postid,$docnum)){
-    $sql = "UPDATE postfiletable set freq = freq + 1 WHERE docname = '$docnum'";
-
+    $sql = "UPDATE postfiletable set freq = freq + 1 WHERE docname = '$docnum' AND postid = '$postid'";
+    echo $postid,'updating postifile table+1<Br />';
   }
   else{   //not exist in our file
     $sql = "UPDATE indextable set hit = hit + 1 WHERE postid = '$postid'";
@@ -166,12 +166,17 @@ function func_PrintDocsWithHighestHits(&$arry,&$textAfterSplit){
   foreach(array_keys($arry) as &$value)
     if($arry[$value] > $max)
       $max = $arry[$value];
+    // echo 'max= ',$max,'<br />';
+    if($max == 0) return false;
   foreach(array_keys($arry) as &$value){
-    if($arry[$value] == $max){
+    if(($arry[$value] == $max) && ($max > 0)) {
       printDocPreview($value,$textAfterSplit);
     }
   }
+
   echo '</div>';
+  return true;
+  
 }
 function printDocPreview($docNum,&$arry){
   $fp = fopen('Permanent/'.strval($docNum),"r");
@@ -194,9 +199,9 @@ function printDocPreview($docNum,&$arry){
 function func_CheckIfIncludedInStopList($term){
   $stopList= array("a","all","and","any","at","be","do","for","her",
 "how","if","is","many","not","see","the","their","when","why");
-// foreach($stopList as $value)
-  // if($term == $value)
-    // return true;
+foreach($stopList as $value)
+  if($term == $value)
+    return true;
 
 
   return false;
@@ -205,6 +210,7 @@ function func_CheckIfIncludedInStopList($term){
 
 function func_CheckIfExistsInSameDoc($conn, $postid,$docnum){
   $sql ="SELECT * from postfiletable WHERE postid = '$postid' AND docname = '$docnum'";
+  echo 'postiid= ',$postid,' docNum=  ',$docnum,'<br />';
   $result = $conn->query($sql);
   if(!$result) return NULL;
   else return $result->num_rows;

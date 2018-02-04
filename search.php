@@ -35,10 +35,12 @@ require_once("functions.php");
 $conn = func_ConnectToDb();
   $numberOfWords = count($textAfterSplit);
     for($i =0;$i<count($textAfterSplit);$i++){
-      // echo $textAfterSplit[$i],"<br />" ;//Omri- use this variable to search in an index file which you will write (add random words and numbers) and return in which files the words appear
+      // echo 'text= ',$textAfterSplit[$i],'<br />';
+       if(func_CheckIfIncludedInStopList($textAfterSplit[$i])) continue;
       func_FindTermInDocNum($conn,$textAfterSplit[$i],$arry);
     }
-    func_PrintDocsWithHighestHits($arry,$textAfterSplit);
+    if(!func_PrintDocsWithHighestHits($arry,$textAfterSplit))
+      header('location: index.php');
   // if($numberOfWords == )
 
 // print_r($arry);
