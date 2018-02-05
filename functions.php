@@ -14,7 +14,9 @@ Global variables!
 */
 // include("showDocContent.php");
 
-
+function br(){
+  echo '<br />';
+}
 function  func_CheckIfFileOpensOk($path){
   if($fp = fopen($path, "r+"))  return true;
   else {
@@ -27,7 +29,6 @@ function func_GetFileAsString($path){
   $text = file_get_contents($path);
 
   if($text != false){
-    echo ' read index file<br />';
     $textAfterSplit =preg_split("/[\s,(,),.,<,>':\"]+/",$text) ;
     for($i=0;$i<count($textAfterSplit);$i++) $textAfterSplit[$i] = strtolower($textAfterSplit[$i]);
 
@@ -102,7 +103,6 @@ function func_InsertNewTerm($conn,$term,$docnum){
 function func_UpdateNewTerm($conn,$postid,$docnum){
   if(func_CheckIfExistsInSameDoc($conn,$postid,$docnum)){
     $sql = "UPDATE postfiletable set freq = freq + 1 WHERE docname = '$docnum' AND postid = '$postid'";
-    echo $postid,'updating postifile table+1<Br />';
   }
   else{   //not exist in our file
     $sql = "UPDATE indextable set hit = hit + 1 WHERE postid = '$postid'";
@@ -176,7 +176,7 @@ function func_PrintDocsWithHighestHits(&$arry,&$textAfterSplit){
 
   echo '</div>';
   return true;
-  
+
 }
 function printDocPreview($docNum,&$arry){
   $fp = fopen('Permanent/'.strval($docNum),"r");
@@ -198,7 +198,7 @@ function printDocPreview($docNum,&$arry){
 
 function func_CheckIfIncludedInStopList($term){
   $stopList= array("a","all","and","any","at","be","do","for","her",
-"how","if","is","many","not","see","the","their","when","why");
+"how","if","is","many","see","the","their","when","why");
 foreach($stopList as $value)
   if($term == $value)
     return true;
@@ -210,15 +210,96 @@ foreach($stopList as $value)
 
 function func_CheckIfExistsInSameDoc($conn, $postid,$docnum){
   $sql ="SELECT * from postfiletable WHERE postid = '$postid' AND docname = '$docnum'";
-  echo 'postiid= ',$postid,' docNum=  ',$docnum,'<br />';
   $result = $conn->query($sql);
   if(!$result) return NULL;
   else return $result->num_rows;
 
 }
+function func_whereBracketsClose(&$textAfterSplit,$i){
+  for($j=$i;$j<count($textAfterSplit)-$i+1;$j++){
+    $str = $textAfterSplit[$j];
+    br();
+    if($str[strlen($str)-1] == ')')
+      return $j;
+    }
+    return -1;
+}
+function func_SearchBrackets(&$textAfterSplit,$i){
+  $j = func_whereBracketsClose($textAfterSplit,$i);
 
 
+}
+//
+// if($str == "or") handleOR();
+// else if($str == "not") handleNOT();
+// else if($str[0] == '(') handleBrackets();
+// else if($str[0] == '"') handleParentheses();
 
+function handleOR(&$textAfterSplit,$i,&$arry,&$arry2,$conn){
+  // searchOR($textAfterSplit($i-1),$textAfterSplit($i+1);
+  $termsArr = array();
+   func_FindTermInDocNum($conn,$textAfterSplit[$i-1],$arry);
+   func_FindTermInDocNum($conn,$textAfterSplit[$i+1],$array2);
+  br();
+  // print_r($arr);
+  // br();
+  print_r($arry);
+br();
+  print_r($arry2);
+  br();
+
+}
+function handleNOT(&$textAfterSplit,$i,&$arry,$conn){
+  echo 'this is NOT<br />';
+
+}
+function handleBrackets(&$textAfterSplit,$i,&$arry,$conn){
+  echo 'this is Brackets<br />';
+
+
+}
+function handleParentheses(&$textAfterSplit,$i,&$arry,$conn){
+  echo 'this is Parentehehh<br />';
+
+}
+function calculateOR(&$arry,&$arry2,&$fileArray){
+  for($i=2;$i<count($fileArray);$i++){
+    if(($arry[strval($fileArray[$i])] == 1) || ($arry2[strval($fileArray[$i])] >= 1))
+      $arry[strval($fileArray[$i])] = 1;
+    $arry2[strval($fileArray[$i])] = 0;
+    }
+
+}
+function calculateAND(&$arry,&$arry2,&$fileArray){
+  for($i=2;$i<count($fileArray);$i++){
+      if(($arry[strval($fileArray[$i])] == 1) && ($arry2[strval($fileArray[$i])] >= 1)){
+      $arry[strval($fileArray[$i])] = 1;
+    }
+      else{
+      $arry[strval($fileArray[$i])] = 0;
+
+    }
+    $arry2[strval($fileArray[$i])] = 0;
+    }
+
+}
+
+function calculateNOT(&$arry,&$arry2,&$fileArray){
+
+  for($i=2;$i<count($fileArray);$i++){
+    if($arry2[strval($fileArray[$i])] == 0)
+      $arry2[strval($fileArray[$i])] =1;
+    else {
+      $arry2[strval($fileArray[$i])]=0;
+    }
+    //   $arry[strval($fileArray[$i])] = 1;
+    // else if($arry2[strval($fileArray[$i])] >= 1)
+    // $arry[strval($fileArray[$i])] = 0;
+    // $arry2[strval($fileArray[$i])] = 0;
+    }
+    calculateAND($arry,$arry2,$fileArray);
+
+}
 
 
 

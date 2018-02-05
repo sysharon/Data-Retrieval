@@ -37,7 +37,7 @@ ELSE means there were post request with the files!
 for($i=0;$i<$numberOfFiles;$i++){
  if($fp = fopen($_FILES["file$i"]['tmp_name'],"r+")) {
    $fileArray=scandir("Permanent");
-$max = 0;
+   $max = 0;
    for($k=0;$k<count($fileArray);$k++){
      $value = intval($fileArray[$k]);
      if($value > $max) $max=$value;
@@ -61,7 +61,6 @@ $max = 0;
        echo 'cant sort the array<Br />';
      }
 
-     echo 'max= ',$max,'<br />';
      $fileNum = $max;
      if(!copy($_FILES["file$i"]['tmp_name'],"Permanent/$max")) echo 'cant copy file! = ',$_FILES["file$i"]['tmp_name'],'<br />';
 
@@ -72,7 +71,6 @@ $max = 0;
    */
    for($j=0;$j<count($str);$j++){
      if($str[$j]== '') continue;
-     echo '$str[$j]= ',$str[$j],'<br />';
      // if(func_CheckIfIncludedInStopList($str[$j])) continue;
      $postid = func_CheckIfExists($conn,$str[$j],$fileNum);
      if($postid == -1)   func_InsertNewTerm($conn,$str[$j],$fileNum);
@@ -80,6 +78,7 @@ $max = 0;
 
  }
  }
+ echo 'File: ',$i+1,' Has succesfully been added.<Br />';
 }
 func_DissconnectFromDB($conn);
 
