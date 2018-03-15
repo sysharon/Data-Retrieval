@@ -101,17 +101,28 @@ function func_InsertNewTerm($conn,$term,$docnum){
 
 */
 function func_UpdateNewTerm($conn,$postid,$docnum){
+  echo'<script>console.log("func");</script>';
   if(func_CheckIfExistsInSameDoc($conn,$postid,$docnum)){
+    echo '<script>console.log("if");</script>';
     $sql = "UPDATE postfiletable set freq = freq + 1 WHERE docname = '$docnum' AND postid = '$postid'";
   }
   else{   //not exist in our file
+    echo '<script>console.log("else");</script>';
+    print "postId = $postid";
     $sql = "UPDATE indextable set hit = hit + 1 WHERE postid = '$postid'";
-    $result = $conn->query("INSERT INTO postfiletable (postid, docname, freq) VALUES ('$postid','$docnum','1')");
+    echo '<script>console.log("'.$sql.'");</script>';
+    //$sql = "UPDATE postfiletable set freq = freq + 1 WHERE docname = '$docnum'";
+    echo '<script>console.log("docnum: '.$docnum.'");</script>';
+    echo '<script>console.log("docnum: '.$postid.'");</script>';
+
+    $result = $conn->query("INSERT INTO postfiletable (postid, docname) VALUES ('$postid','$docnum')");
+    echo '<script>console.log("result = '.$result.'");</script>';
     if(!$result)  return NULL;
   }
 
   $result = $conn->query($sql);
-if(!$result)  return NULL;
+    echo'<script>console.log("result = '.$result.'");</script>';
+if(!$result)  echo '<script>console.log("SQL problem");</script>';;
 
 
 }
@@ -211,6 +222,7 @@ foreach($stopList as $value)
 function func_CheckIfExistsInSameDoc($conn, $postid,$docnum){
   $sql ="SELECT * from postfiletable WHERE postid = '$postid' AND docname = '$docnum'";
   $result = $conn->query($sql);
+  // echo '<script>console.log("func_CheckIfExistsInSameDoc = "+'.$result.');</script>';
   if(!$result) return NULL;
   else return $result->num_rows;
 
