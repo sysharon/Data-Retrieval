@@ -312,6 +312,46 @@ function calculateNOT(&$arry,&$arry2,&$fileArray){
     calculateAND($arry,$arry2,$fileArray);
 
 }
+function DeleteFromPostFIleTable($conn, $docName){
+  $sql = "DELETE FROM postfiletable WHERE docname = '".$docName."'";
+  $result = $conn->query($sql);
+}
+
+function DeleteTerm($conn, $docName, $term){
+  $sql = "SELECT * FROM indextable WHERE term = '".$term."'";
+  $result = $conn->query($sql);
+  for($i=0;$i<$result->num_rows;$i++){
+     $row = $result->fetch_assoc(); 
+    if($row['hit'] > 1){
+      $sql = "UPDATE indextable SET hit = '".($row['hit']-1)."' WHERE term = '".$term."'";
+    } 
+    else {
+      $sql = "DELETE FROM indextable WHERE term = '".$term."'";
+    }
+    $resultt = $conn->query($sql);
+    print "Deleting $term ... <br>";
+    
+  }
+}
+
+function DeleteFile($fileNum){
+if(file_exists("Permanent/".$fileNum)){
+    $conn = func_ConnectToDb();
+    $fileAsString = func_GetFileAsString("Permanent/".$fileNum);
+    DeleteFromPostFIleTable($conn, $fileNum);
+    if($fileAsString != NULL){
+    foreach ($fileAsString as $term) 
+      DeleteTerm($conn, $fileNum, $term);
+  }
+    $f = @fopen("Permanent/".$fileNum, "r+");
+    if ($f !== false) {
+    ftruncate($f, 0);
+    fclose($f);
+    $conn->close();
+  }
+
+}
+}
 
 
 

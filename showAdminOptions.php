@@ -13,7 +13,7 @@ if(!isset($_SESSION))
   </div>
 
   <div class="AdminOptions">
-    <a href="#">
+    <a href="AdminDeletePage.php">
     Remove Document  </div>
     </a>
 
